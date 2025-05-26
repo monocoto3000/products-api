@@ -2,11 +2,11 @@ pipeline {
     agent any
 
     environment {
-        APP_NAME = 'products-client-api'
-        REPO_URL = 'https://github.com/monocoto3000/products-client-api.git'
+        APP_NAME = 'products-api'
+        REPO_URL = 'https://github.com/monocoto3000/products-api.git'
         SSH_CRED_ID = 'ssh-key-ec2'
         EC2_USER = 'ubuntu'
-        REMOTE_PATH = '/home/ubuntu/products-client-api'
+        REMOTE_PATH = '/home/ubuntu/products-api'
     }
 
     stages {
@@ -25,17 +25,17 @@ pipeline {
                     switch(branch) {
                         case 'main':
                             env.DEPLOY_ENV = 'production'
-                            env.EC2_IP = '44.205.201.108'
+                            env.EC2_IP = '54.174.247.47' // No IP elastica
                             env.NODE_ENV = 'production'
                             break
                         case 'dev':
                             env.DEPLOY_ENV = 'development'
-                            env.EC2_IP = '107.22.77.233'
+                            env.EC2_IP = '52.45.170.88'
                             env.NODE_ENV = 'development'
                             break
                         case 'qa':
                             env.DEPLOY_ENV = 'qa'
-                            env.EC2_IP = '3.227.65.63'
+                            env.EC2_IP = '34.205.20.133' // No IP elastica 
                             env.NODE_ENV = 'qa'
                             break
                         default:
@@ -68,18 +68,43 @@ pipeline {
 
         stage('Deploy') {
             when {
-                expression { env.DEPLOY_ENV == 'production' }
+                expression { env.DEPLOY_ENV != 'none' }
             }
             steps {
-                withCredentials([
-                    sshUserPrivateKey(credentialsId: SSH_CRED_ID, keyFileVariable: 'SSH_KEY'),
-                    string(credentialsId: "db-host-production", variable: 'DB_HOST'),
-                    string(credentialsId: "db-user-production", variable: 'DB_USER'),
-                    string(credentialsId: "db-pass-production", variable: 'DB_PASS'),
-                    string(credentialsId: "db-name-production", variable: 'DB_NAME')
-                ]) {
-                    sh 'chmod +x scripts/deploy.sh'
-                    sh 'scripts/deploy.sh'
+                script {
+                    def envSuffix = env.DEPLOY_ENV
+                    def sshKeyId = "ssh-key-ec2"
+                    def dbHostId = "db-host-${envSuffix}"
+                    def dbUserId = "db-user-${envSuffix}"
+                    def dbPassId = "db-pass-${envSuffix}"
+                    def dbNameId = "db-name-${envSuffix}"
+
+                    withCredentials([
+                        sshUserPrivateKey(credentialsId: SSH_CRED_ID, keyFileVariable: 'SSH_KEY'),
+                        string(credentialsId: dbHostId, variable: 'DB_HOST'),
+                        string(credentialsId: dbUserId, variable: 'DB_USER'),
+                        string(credentialsId: dbPassId, variable: 'DB_PASS'),
+                        string(credentialsId: dbNameId, variable: 'DB_NAME')
+                    ]) {
+                        sh 'chmod +x scripts/deploy.sh'   
+                        def branchName = env.GIT_BRANCH.replaceAll('origin/', '')
+                        sh """
+                        SSH_KEY=\$SSH_KEY \
+                        EC2_USER=\$EC2_USER \
+                        EC2_IP=\$EC2_IP \
+                        REMOTE_PATH=\$REMOTE_PATH \
+                        REPO_URL=\$REPO_URL \
+                        APP_NAME=\$APP_NAME \
+                        NODE_ENV=\$NODE_ENV \
+                        GIT_BRANCH=${branchName} \
+                        DB_HOST=\$DB_HOST \
+                        DB_USER=\$DB_USER \
+                        DB_PASS=\$DB_PASS \
+                        DB_NAME=\$DB_NAME \
+                        scripts/deploy.sh
+                        """
+                    }
+                    
                 }
             }
         }
