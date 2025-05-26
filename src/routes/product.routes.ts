@@ -267,7 +267,7 @@ router.delete('/:id', controller.delete);
  *       404:
  *         description: Producto no encontrado
  */
-router.post('/stock/:id/add/:quantity', controller.addStock);
+router.post('/stock/:id/add/:quantity', controller.addStock as any);
 
 /**
  * @swagger
@@ -312,7 +312,7 @@ router.post('/stock/:id/add/:quantity', controller.addStock);
  *       404:
  *         description: Producto no encontrado
  */
-router.post('/stock/:id/subtract/:quantity', controller.subtractStock);
+router.post('/stock/:id/subtract/:quantity', controller.subtractStock as any);
 
 /**
  * @swagger
@@ -357,6 +357,6 @@ router.post('/stock/:id/subtract/:quantity', controller.subtractStock);
  *       404:
  *         description: Producto no encontrado
  */
-router.post('/stock/:id/adjust/:stock', controller.adjustStock);
+router.post('/stock/:id/adjust/:stock', controller.adjustStock as any);
 
 export default router;
