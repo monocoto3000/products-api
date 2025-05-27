@@ -33,6 +33,8 @@ ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$EC2_USER@$EC2_IP" << EOF
     echo "🔄 Haciendo pull del código"
     git fetch origin
     git checkout $GIT_BRANCH
+    git reset --hard HEAD
+    git clean -fd
     git pull origin $GIT_BRANCH
   fi
 
