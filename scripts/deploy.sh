@@ -1,8 +1,6 @@
 #!/bin/bash
-set -euo pipefail
-echo "🚀 Iniciando despliegue remoto en $EC2_IP"
 
-# Validación de variables de entorno
+echo "🚀 Iniciando despliegue remoto en $EC2_IP"
 if [ -z "$EC2_IP" ] || [ -z "$EC2_USER" ] || [ -z "$SSH_KEY" ] || [ -z "$REPO_URL" ] || [ -z "$GIT_BRANCH" ] || [ -z "$NODE_ENV" ]; then
   echo "❌ Faltan variables de entorno. Asegúrate de definir EC2_IP, EC2_USER, SSH_KEY, REPO_URL, GIT_BRANCH y NODE_ENV."
   exit 1
@@ -11,15 +9,13 @@ if [ -z "$DB_USER" ] || [ -z "$DB_PASS" ] || [ -z "$DB_NAME" ] || [ -z "$DB_HOST
   echo "❌ Faltan variables de entorno de la base de datos. Asegúrate de definir DB_USER, DB_PASS, DB_NAME y DB_HOST."
   exit 1
 fi
-
 REMOTE_PATH="/home/$EC2_USER/app"
 APP_NAME="$APP_NAME"
 
 echo "🌐 Conectando a la instancia EC2: $EC2_IP"
 echo "➡️ Conectando a $EC2_USER@$EC2_IP"
 
-ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$EC2_USER@$EC2_IP" << EOF
- set -ex
+ssh -i $SSH_KEY -o StrictHostKeyChecking=no $EC2_USER@$EC2_IP << EOF
   set -e
 
   echo "📁 Creando/entrando a carpeta del proyecto"
@@ -42,7 +38,6 @@ ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$EC2_USER@$EC2_IP" << EOF
 
   echo "🔧 Creando archivo .env"
   cat > .env << ENV
-  
 DB_USER_${NODE_ENV^^}=$DB_USER
 DB_PASSWORD_${NODE_ENV^^}=$DB_PASS
 DB_NAME_${NODE_ENV^^}=$DB_NAME

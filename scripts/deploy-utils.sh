@@ -47,14 +47,4 @@ else
   echo "✅ build-essential ya está instalado."
 fi
 
-# Instalar MySQL Server
-if ! command -v mysql >/dev/null 2>&1; then
-  echo "📥 Instalando MySQL..."
-  sudo apt-get install -y mysql-server
-  sudo systemctl enable mysql
-  sudo systemctl start mysql
-else
-  echo "✅ MySQL ya está instalado."
-fi
-
 echo "✅ Configuración completada. Tu EC2 está lista para los despliegues."
