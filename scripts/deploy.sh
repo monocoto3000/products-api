@@ -42,6 +42,17 @@ ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$EC2_USER@$EC2_IP" << EOF
 
   echo "🔧 Creando archivo .env"
   cat > .env << ENV
+  DB_USER_${NODE_ENV^^}=$DB_USER
+  DB_PASSWORD_${NODE_ENV^^}=$DB_PASS
+  DB_NAME_${NODE_ENV^^}=$DB_NAME
+  DB_HOST_${NODE_ENV^^}=$DB_HOST
+  DB_PORT=3306
+  PORT=3000
+  ENV
+
+  echo "📋 Contenido del archivo .env creado:"
+  cat .env
+  echo "---"
   
 DB_USER_${NODE_ENV^^}=$DB_USER
 DB_PASSWORD_${NODE_ENV^^}=$DB_PASS
