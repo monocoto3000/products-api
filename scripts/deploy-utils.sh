@@ -47,4 +47,23 @@ else
   echo "✅ build-essential ya está instalado."
 fi
 
+# Instalar MySQL Server
+if ! sudo systemctl is-active --quiet mysql 2>/dev/null; then
+  echo "🗄️ Instalando MySQL Server..."
+  
+  # Preconfigurar MySQL para instalación no interactiva
+  sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password rootpassword123'
+  sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password rootpassword123'
+  
+  sudo apt-get install -y mysql-server
+  
+  echo "🔧 Configurando MySQL..."
+  sudo systemctl start mysql
+  sudo systemctl enable mysql
+  
+  echo "✅ MySQL instalado y configurado."
+else
+  echo "✅ MySQL ya está instalado y corriendo."
+fi
+
 echo "✅ Configuración completada. Tu EC2 está lista para los despliegues."
