@@ -19,7 +19,7 @@ echo "🌐 Conectando a la instancia EC2: $EC2_IP"
 echo "➡️ Conectando a $EC2_USER@$EC2_IP"
 
 ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$EC2_USER@$EC2_IP" << EOF
-  set -ex
+ set -ex
   set -e
 
   echo "📁 Creando/entrando a carpeta del proyecto"
@@ -33,8 +33,6 @@ ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$EC2_USER@$EC2_IP" << EOF
     echo "🔄 Haciendo pull del código"
     git fetch origin
     git checkout $GIT_BRANCH
-    git reset --hard HEAD
-    git clean -fd
     git pull origin $GIT_BRANCH
   fi
 
@@ -43,18 +41,15 @@ ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$EC2_USER@$EC2_IP" << EOF
   ./scripts/deploy-utils.sh
 
   echo "🔧 Creando archivo .env"
-  cat > .env << ENVFILE
+  cat > .env << ENV
+  
 DB_USER_${NODE_ENV^^}=$DB_USER
 DB_PASSWORD_${NODE_ENV^^}=$DB_PASS
 DB_NAME_${NODE_ENV^^}=$DB_NAME
 DB_HOST_${NODE_ENV^^}=$DB_HOST
 DB_PORT=3306
 PORT=3000
-ENVFILE
-
-  echo "📋 Contenido del archivo .env creado:"
-  cat .env
-  echo "---"
+ENV
 
   echo "📦 Instalando dependencias"
   npm ci
