@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -euo pipefail
 echo "🚀 Iniciando despliegue remoto en $EC2_IP"
 
 # Validación de variables de entorno
@@ -19,6 +19,7 @@ echo "🌐 Conectando a la instancia EC2: $EC2_IP"
 echo "➡️ Conectando a $EC2_USER@$EC2_IP"
 
 ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$EC2_USER@$EC2_IP" << EOF
+ set -ex
   set -e
 
   echo "📁 Creando/entrando a carpeta del proyecto"
