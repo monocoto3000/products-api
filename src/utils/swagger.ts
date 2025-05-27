@@ -8,7 +8,7 @@ const options = {
     info: {
       title: 'Products API',
       version: '1.0.0',
-      description: 'Inventory manager for Products - DEV TEST',
+      description: 'Inventory manager for Products - DEV TEST #2',
     },
     servers: [
       {
