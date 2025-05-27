@@ -8,11 +8,11 @@ const options = {
     info: {
       title: 'Products API',
       version: '1.0.0',
-      description: 'Inventory manager for Products - DEV TEST #2',
+      description: 'Inventory manager for Products - QA TEST #1',
     },
     servers: [
       {
-        url: 'http://52.45.170.88:3000',
+        url: 'http://44.205.201.108:3000',
       },
     ],
   },

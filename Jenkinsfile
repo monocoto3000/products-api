@@ -35,7 +35,7 @@ pipeline {
                             break
                         case 'qa':
                             env.DEPLOY_ENV = 'qa'
-                            env.EC2_IP = '34.205.20.133' // No IP elastica 
+                            env.EC2_IP = '44.205.201.108' 
                             env.NODE_ENV = 'qa'
                             break
                         default:
