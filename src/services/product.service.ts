@@ -12,7 +12,7 @@ export class ProductService {
     });
   }
 
-  async getById(id: number) {
+  async getById(id: string) {
     const product = await Product.findOne({ 
       where: { id, deletedAt: null },
       include: [{ model: Category }]
@@ -27,7 +27,7 @@ export class ProductService {
     return product;
   }
 
-  async update(id: number, data: any) {
+  async update(id: string, data: any) {
     const product = await Product.findOne({ where: { id, deletedAt: null } });
     if (!product) throw new HttpException(404, 'Product not found');
     
@@ -36,7 +36,7 @@ export class ProductService {
     return updatedProduct;
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     const product = await Product.findOne({ where: { id, deletedAt: null } });
     if (!product) throw new HttpException(404, 'Product not found');
 
@@ -44,7 +44,7 @@ export class ProductService {
     console.log(`Producto eliminado: ID ${id}`);
   }
 
-  async addStock(id: number, quantity: number) {
+  async addStock(id: string, quantity: number) {
     if (quantity <= 0) {
       throw new HttpException(400, 'La cantidad debe ser mayor a 0');
     }
@@ -68,7 +68,7 @@ export class ProductService {
     };
   }
 
-  async subtractStock(id: number, quantity: number) {
+  async subtractStock(id: string, quantity: number) {
     if (quantity <= 0) {
       throw new HttpException(400, 'La cantidad debe ser mayor a 0');
     }
@@ -96,7 +96,7 @@ export class ProductService {
     };
   }
 
-  async adjustStock(id: number, newStock: number) {
+  async adjustStock(id: string, newStock: number) {
     if (newStock < 0) {
       throw new HttpException(400, 'El stock no puede ser negativo');
     }

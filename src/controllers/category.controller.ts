@@ -15,7 +15,7 @@ export class CategoryController {
 
   getById = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const id = Number(req.params.id);
+      const id = String(req.params.id);
       const result = await categoryService.getById(id);
       res.json(result);
     } catch (err) {
@@ -34,7 +34,7 @@ export class CategoryController {
 
   update = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const id = Number(req.params.id);
+      const id = String(req.params.id);
       const result = await categoryService.update(id, req.body);
       res.json(result);
     } catch (err) {
@@ -44,7 +44,7 @@ export class CategoryController {
 
   delete = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const id = Number(req.params.id);
+      const id = String(req.params.id);
       await categoryService.delete(id);
       res.status(204).send();
     } catch (err) {

@@ -6,7 +6,7 @@ export class CategoryService {
     return await Category.findAll({ where: { deletedAt: null } });
   }
 
-  async getById(id: number) {
+  async getById(id: string) {
     const category = await Category.findOne({ where: { id, deletedAt: null } });
     if (!category) throw new HttpException(404, 'Category not found');
     return category;
@@ -17,7 +17,7 @@ export class CategoryService {
     return newCategory;
   }
 
-  async update(id: number, data: Partial<{ name: string }>) {
+  async update(id: string, data: Partial<{ name: string }>) {
     const category = await Category.findOne({ where: { id, deletedAt: null } });
     if (!category) throw new HttpException(404, 'Category not found');
 
@@ -25,7 +25,7 @@ export class CategoryService {
     return category;
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     const category = await Category.findOne({ where: { id, deletedAt: null } });
     if (!category) throw new HttpException(404, 'Category not found');
 

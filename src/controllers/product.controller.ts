@@ -16,7 +16,7 @@ export class ProductController {
 
   getById = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const id = Number(req.params.id);
+      const id = String(req.params.id);
       const result = await productService.getById(id);
       res.json(result);
     } catch (err) {
@@ -35,7 +35,7 @@ export class ProductController {
 
   update = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const id = Number(req.params.id);
+      const id = String(req.params.id);
       const result = await productService.update(id, req.body);
       res.json(result);
     } catch (err) {
@@ -45,7 +45,7 @@ export class ProductController {
 
   delete = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const id = Number(req.params.id);
+      const id = String(req.params.id);
       await productService.delete(id);
       res.status(204).send();
     } catch (err) {
@@ -55,7 +55,7 @@ export class ProductController {
 
   addStock = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const id = Number(req.params.id);
+      const id = String(req.params.id);
       const quantity = Number(req.params.quantity);
       
       if (isNaN(quantity)) {
@@ -71,7 +71,7 @@ export class ProductController {
 
   subtractStock = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const id = Number(req.params.id);
+      const id = String(req.params.id);
       const quantity = Number(req.params.quantity);
       
       if (isNaN(quantity)) {
@@ -87,7 +87,7 @@ export class ProductController {
 
   adjustStock = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const id = Number(req.params.id);
+      const id = String(req.params.id);
       const newStock = Number(req.params.stock);
       
       if (isNaN(newStock)) {
