@@ -53,48 +53,39 @@ export class ProductController {
     }
   };
 
-  addStock = async (req: Request, res: Response, next: NextFunction) => {
+  addStockBulk = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const id = String(req.params.id);
-      const quantity = Number(req.params.quantity);
-      
-      if (isNaN(quantity)) {
-        return res.status(400).json({ error: 'Cantidad debe ser un número válido' });
+      const items = req.body; 
+      if (!Array.isArray(items)) {
+        return res.status(400).json({ error: 'El body debe ser un array de objetos { id, quantity }' });
       }
-
-      const result = await productService.addStock(id, quantity);
+      const result = await productService.addStockBulk(items);
       res.json(result);
     } catch (err) {
       next(err);
     }
   };
 
-  subtractStock = async (req: Request, res: Response, next: NextFunction) => {
+  subtractStockBulk = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const id = String(req.params.id);
-      const quantity = Number(req.params.quantity);
-      
-      if (isNaN(quantity)) {
-        return res.status(400).json({ error: 'Cantidad debe ser un número válido' });
+      const items = req.body;
+      if (!Array.isArray(items)) {
+        return res.status(400).json({ error: 'El body debe ser un array de objetos { id, quantity }' });
       }
-
-      const result = await productService.subtractStock(id, quantity);
+      const result = await productService.subtractStockBulk(items);
       res.json(result);
     } catch (err) {
       next(err);
     }
   };
 
-  adjustStock = async (req: Request, res: Response, next: NextFunction) => {
+  adjustStockBulk = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const id = String(req.params.id);
-      const newStock = Number(req.params.stock);
-      
-      if (isNaN(newStock)) {
-        return res.status(400).json({ error: 'Stock debe ser un número válido' });
+      const items = req.body;
+      if (!Array.isArray(items)) {
+        return res.status(400).json({ error: 'El body debe ser un array de objetos { id, newStock }' });
       }
-
-      const result = await productService.adjustStock(id, newStock);
+      const result = await productService.adjustStockBulk(items);
       res.json(result);
     } catch (err) {
       next(err);

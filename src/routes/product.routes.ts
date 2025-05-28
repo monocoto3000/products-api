@@ -232,143 +232,174 @@ router.delete('/:id', controller.delete);
 
 /**
  * @swagger
- * /products/stock/{id}/add/{quantity}:
+ * /products/stock/add-bulk:
  *   post:
- *     summary: Agregar stock a un producto
+ *     summary: Agregar stock a múltiples productos
  *     tags: [Stock]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *         description: ID del producto (UUID)
- *       - in: path
- *         name: quantity
- *         required: true
- *         schema:
- *           type: integer
- *           minimum: 1
- *         description: Cantidad a agregar
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               type: object
+ *               required:
+ *                 - id
+ *                 - quantity
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   format: uuid
+ *                   description: ID del producto (UUID)
+ *                 quantity:
+ *                   type: integer
+ *                   minimum: 1
+ *                   description: Cantidad a agregar
  *     responses:
  *       200:
- *         description: Stock agregado exitosamente
+ *         description: Resultado de la operación para cada producto
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 productId:
- *                   type: string
- *                   format: uuid
- *                 previousStock:
- *                   type: integer
- *                 newStock:
- *                   type: integer
- *                 quantityAdded:
- *                   type: integer
- *                 availability:
- *                   type: integer
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   productId:
+ *                     type: string
+ *                   previousStock:
+ *                     type: integer
+ *                   newStock:
+ *                     type: integer
+ *                   quantityAdded:
+ *                     type: integer
+ *                   availability:
+ *                     type: integer
+ *                   success:
+ *                     type: boolean
+ *                   error:
+ *                     type: string
  *       400:
  *         description: Cantidad inválida
  *       404:
  *         description: Producto no encontrado
  */
-router.post('/stock/:id/add/:quantity', controller.addStock as any);
+router.post('/stock/add-bulk', controller.addStockBulk as any);
 
 /**
  * @swagger
- * /products/stock/{id}/subtract/{quantity}:
+ * /products/stock/subtract-bulk:
  *   post:
- *     summary: Reducir stock de un producto
+ *     summary: Reducir stock de múltiples productos
  *     tags: [Stock]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *         description: ID del producto (UUID)
- *       - in: path
- *         name: quantity
- *         required: true
- *         schema:
- *           type: integer
- *           minimum: 1
- *         description: Cantidad a reducir
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               type: object
+ *               required:
+ *                 - id
+ *                 - quantity
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   format: uuid
+ *                   description: ID del producto (UUID)
+ *                 quantity:
+ *                   type: integer
+ *                   minimum: 1
+ *                   description: Cantidad a reducir
  *     responses:
  *       200:
- *         description: Stock reducido exitosamente
+ *         description: Resultado de la operación para cada producto
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 productId:
- *                   type: string
- *                   format: uuid
- *                 previousStock:
- *                   type: integer
- *                 newStock:
- *                   type: integer
- *                 quantitySubtracted:
- *                   type: integer
- *                 availability:
- *                   type: integer
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   productId:
+ *                     type: string
+ *                   previousStock:
+ *                     type: integer
+ *                   newStock:
+ *                     type: integer
+ *                   quantitySubtracted:
+ *                     type: integer
+ *                   availability:
+ *                     type: integer
+ *                   success:
+ *                     type: boolean
+ *                   error:
+ *                     type: string
  *       400:
  *         description: Cantidad inválida o stock insuficiente
  *       404:
  *         description: Producto no encontrado
  */
-router.post('/stock/:id/subtract/:quantity', controller.subtractStock as any);
+router.post('/stock/subtract-bulk', controller.subtractStockBulk as any);
 
 /**
  * @swagger
- * /products/stock/{id}/adjust/{stock}:
+ * /products/stock/adjust-bulk:
  *   post:
- *     summary: Ajustar stock a una cantidad específica
+ *     summary: Ajustar stock de múltiples productos a una cantidad específica
  *     tags: [Stock]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *         description: ID del producto (UUID)
- *       - in: path
- *         name: stock
- *         required: true
- *         schema:
- *           type: integer
- *           minimum: 0
- *         description: Nueva cantidad de stock
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               type: object
+ *               required:
+ *                 - id
+ *                 - newStock
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   format: uuid
+ *                   description: ID del producto (UUID)
+ *                 newStock:
+ *                   type: integer
+ *                   minimum: 0
+ *                   description: Nueva cantidad de stock
  *     responses:
  *       200:
- *         description: Stock ajustado exitosamente
+ *         description: Resultado de la operación para cada producto
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 productId:
- *                   type: string
- *                   format: uuid
- *                 previousStock:
- *                   type: integer
- *                 newStock:
- *                   type: integer
- *                 difference:
- *                   type: integer
- *                 availability:
- *                   type: integer
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   productId:
+ *                     type: string
+ *                   previousStock:
+ *                     type: integer
+ *                   newStock:
+ *                     type: integer
+ *                   difference:
+ *                     type: integer
+ *                   availability:
+ *                     type: integer
+ *                   success:
+ *                     type: boolean
+ *                   error:
+ *                     type: string
  *       400:
  *         description: Stock inválido o ya tiene ese valor
  *       404:
  *         description: Producto no encontrado
  */
-router.post('/stock/:id/adjust/:stock', controller.adjustStock as any);
+router.post('/stock/adjust-bulk', controller.adjustStockBulk as any);
+
 
 export default router;

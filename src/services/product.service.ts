@@ -44,83 +44,92 @@ export class ProductService {
     console.log(`Producto eliminado: ID ${id}`);
   }
 
-  async addStock(id: string, quantity: number) {
-    if (quantity <= 0) {
-      throw new HttpException(400, 'La cantidad debe ser mayor a 0');
+  async addStockBulk(items: { id: string, quantity: number }[]) {
+    const results = [];
+    for (const { id, quantity } of items) {
+      try {
+        if (quantity <= 0) throw new HttpException(400, 'La cantidad debe ser mayor a 0');
+        const product = await Product.findOne({ where: { id, deletedAt: null } });
+        if (!product) throw new HttpException(404, 'Product not found');
+        const currentStock = product.getDataValue('stock');
+        const newStock = currentStock + quantity;
+        await product.update({ stock: newStock });
+        results.push({
+          productId: id,
+          previousStock: currentStock,
+          newStock,
+          quantityAdded: quantity,
+          availability: newStock > 0 ? 1 : 0,
+          success: true
+        });
+      } catch (error: any) {
+        results.push({
+          productId: id,
+          error: error.message || 'Error desconocido',
+          success: false
+        });
+      }
     }
-
-    const product = await Product.findOne({ where: { id, deletedAt: null } });
-    if (!product) throw new HttpException(404, 'Product not found');
-
-    const currentStock = product.getDataValue('stock');
-    const newStock = currentStock + quantity;
-
-    await product.update({ stock: newStock });
-    
-    console.log(`Stock agregado: +${quantity} al producto ID ${id}. Stock anterior: ${currentStock}, Stock nuevo: ${newStock}`);
-
-    return {
-      productId: id,
-      previousStock: currentStock,
-      newStock,
-      quantityAdded: quantity,
-      availability: newStock > 0 ? 1 : 0
-    };
+    return results;
   }
 
-  async subtractStock(id: string, quantity: number) {
-    if (quantity <= 0) {
-      throw new HttpException(400, 'La cantidad debe ser mayor a 0');
+  async subtractStockBulk(items: { id: string, quantity: number }[]) {
+    const results = [];
+    for (const { id, quantity } of items) {
+      try {
+        if (quantity <= 0) throw new HttpException(400, 'La cantidad debe ser mayor a 0');
+        const product = await Product.findOne({ where: { id, deletedAt: null } });
+        if (!product) throw new HttpException(404, 'Product not found');
+        const currentStock = product.getDataValue('stock');
+        const newStock = currentStock - quantity;
+        if (newStock < 0) throw new HttpException(400, `No hay suficiente stock. Stock actual: ${currentStock}, cantidad solicitada: ${quantity}`);
+        await product.update({ stock: newStock });
+        results.push({
+          productId: id,
+          previousStock: currentStock,
+          newStock,
+          quantitySubtracted: quantity,
+          availability: newStock > 0 ? 1 : 0,
+          success: true
+        });
+      } catch (error: any) {
+        results.push({
+          productId: id,
+          error: error.message || 'Error desconocido',
+          success: false
+        });
+      }
     }
-
-    const product = await Product.findOne({ where: { id, deletedAt: null } });
-    if (!product) throw new HttpException(404, 'Product not found');
-
-    const currentStock = product.getDataValue('stock');
-    const newStock = currentStock - quantity;
-
-    if (newStock < 0) {
-      throw new HttpException(400, `No hay suficiente stock. Stock actual: ${currentStock}, cantidad solicitada: ${quantity}`);
-    }
-
-    await product.update({ stock: newStock });
-    
-    console.log(`Stock reducido: -${quantity} del producto ID ${id}. Stock anterior: ${currentStock}, Stock nuevo: ${newStock}`);
-
-    return {
-      productId: id,
-      previousStock: currentStock,
-      newStock,
-      quantitySubtracted: quantity,
-      availability: newStock > 0 ? 1 : 0
-    };
+    return results;
   }
 
-  async adjustStock(id: string, newStock: number) {
-    if (newStock < 0) {
-      throw new HttpException(400, 'El stock no puede ser negativo');
+  async adjustStockBulk(items: { id: string, newStock: number }[]) {
+    const results = [];
+    for (const { id, newStock } of items) {
+      try {
+        if (newStock < 0) throw new HttpException(400, 'El stock no puede ser negativo');
+        const product = await Product.findOne({ where: { id, deletedAt: null } });
+        if (!product) throw new HttpException(404, 'Product not found');
+        const currentStock = product.getDataValue('stock');
+        if (currentStock === newStock) throw new HttpException(400, `El stock ya es ${newStock}`);
+        await product.update({ stock: newStock });
+        results.push({
+          productId: id,
+          previousStock: currentStock,
+          newStock,
+          difference: newStock - currentStock,
+          availability: newStock > 0 ? 1 : 0,
+          success: true
+        });
+      } catch (error: any) {
+        results.push({
+          productId: id,
+          error: error.message || 'Error desconocido',
+          success: false
+        });
+      }
     }
-
-    const product = await Product.findOne({ where: { id, deletedAt: null } });
-    if (!product) throw new HttpException(404, 'Product not found');
-
-    const currentStock = product.getDataValue('stock');
-    
-    if (currentStock === newStock) {
-      throw new HttpException(400, `El stock ya es ${newStock}`);
-    }
-
-    await product.update({ stock: newStock });
-    
-    console.log(`Stock ajustado: Producto ID ${id}. Stock anterior: ${currentStock}, Stock nuevo: ${newStock}`);
-
-    return {
-      productId: id,
-      previousStock: currentStock,
-      newStock,
-      difference: newStock - currentStock,
-      availability: newStock > 0 ? 1 : 0
-    };
+    return results;
   }
 
   async getAvailableProducts() {
