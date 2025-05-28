@@ -21,7 +21,8 @@ const controller = new ProductController();
  *                 type: object
  *                 properties:
  *                   id:
- *                     type: integer
+ *                     type: string
+ *                     format: uuid
  *                   name:
  *                     type: string
  *                   description:
@@ -110,8 +111,9 @@ router.get('/filter/low-stock', controller.getLowStockProducts);
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
- *         description: ID del producto
+ *           type: string
+ *           format: uuid
+ *         description: ID del producto (UUID)
  *     responses:
  *       200:
  *         description: Producto encontrado
@@ -149,8 +151,9 @@ router.get('/:id', controller.getById);
  *                 type: string
  *                 description: URL de la imagen
  *               categoryId:
- *                 type: integer
- *                 description: ID de la categoría asociada
+ *                 type: string
+ *                 format: uuid
+ *                 description: ID de la categoría asociada (UUID)
  *               stock:
  *                 type: integer
  *                 description: Stock inicial (por defecto 0)
@@ -174,8 +177,9 @@ router.post('/', controller.create);
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
- *         description: ID del producto
+ *           type: string
+ *           format: uuid
+ *         description: ID del producto (UUID)
  *     requestBody:
  *       required: true
  *       content:
@@ -192,7 +196,8 @@ router.post('/', controller.create);
  *               image:
  *                 type: string
  *               categoryId:
- *                 type: integer
+ *                 type: string
+ *                 format: uuid
  *               stock:
  *                 type: integer
  *     responses:
@@ -214,8 +219,9 @@ router.put('/:id', controller.update);
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
- *         description: ID del producto
+ *           type: string
+ *           format: uuid
+ *         description: ID del producto (UUID)
  *     responses:
  *       204:
  *         description: Producto eliminado exitosamente
@@ -235,8 +241,9 @@ router.delete('/:id', controller.delete);
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
- *         description: ID del producto
+ *           type: string
+ *           format: uuid
+ *         description: ID del producto (UUID)
  *       - in: path
  *         name: quantity
  *         required: true
@@ -253,7 +260,8 @@ router.delete('/:id', controller.delete);
  *               type: object
  *               properties:
  *                 productId:
- *                   type: integer
+ *                   type: string
+ *                   format: uuid
  *                 previousStock:
  *                   type: integer
  *                 newStock:
@@ -280,8 +288,9 @@ router.post('/stock/:id/add/:quantity', controller.addStock as any);
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
- *         description: ID del producto
+ *           type: string
+ *           format: uuid
+ *         description: ID del producto (UUID)
  *       - in: path
  *         name: quantity
  *         required: true
@@ -298,7 +307,8 @@ router.post('/stock/:id/add/:quantity', controller.addStock as any);
  *               type: object
  *               properties:
  *                 productId:
- *                   type: integer
+ *                   type: string
+ *                   format: uuid
  *                 previousStock:
  *                   type: integer
  *                 newStock:
@@ -325,8 +335,9 @@ router.post('/stock/:id/subtract/:quantity', controller.subtractStock as any);
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
- *         description: ID del producto
+ *           type: string
+ *           format: uuid
+ *         description: ID del producto (UUID)
  *       - in: path
  *         name: stock
  *         required: true
@@ -343,7 +354,8 @@ router.post('/stock/:id/subtract/:quantity', controller.subtractStock as any);
  *               type: object
  *               properties:
  *                 productId:
- *                   type: integer
+ *                   type: string
+ *                   format: uuid
  *                 previousStock:
  *                   type: integer
  *                 newStock:

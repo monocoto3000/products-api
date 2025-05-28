@@ -14,8 +14,9 @@ const controller = new CategoryController();
  *         - name
  *       properties:
  *         id:
- *           type: integer
- *           example: 1
+ *           type: string
+ *           format: uuid
+ *           example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
  *         name:
  *           type: string
  *           example: Electronics
@@ -80,7 +81,8 @@ router.get('/', controller.getAll);
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
+ *           format: uuid
  *     responses:
  *       200:
  *         description: Category found
@@ -104,7 +106,8 @@ router.get('/:id', controller.getById);
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
+ *           format: uuid
  *     requestBody:
  *       required: true
  *       content:
@@ -132,7 +135,8 @@ router.put('/:id', controller.update);
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
+ *           format: uuid
  *     responses:
  *       204:
  *         description: Category deleted successfully
