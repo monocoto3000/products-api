@@ -56,7 +56,8 @@ DB_PORT=3306
 PORT=3000
 ENV
 
-  echo "📦 Instalando dependencias"
+  echo "📦 Limpiando node_modules e instalando dependencias"
+  rm -rf node_modules
   npm ci
 
   echo "🏗️ Compilando TypeScript"
