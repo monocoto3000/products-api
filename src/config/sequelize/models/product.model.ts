@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import { sequelize } from '../config/database';
+import { sequelize } from '../../database';
 import { Category } from './category.model';
 import { v4 as uuidv4 } from 'uuid';
 

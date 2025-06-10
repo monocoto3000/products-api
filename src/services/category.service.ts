@@ -1,34 +1,32 @@
-import { Category } from '../models/category.model';
+import { CategoryModel } from '../models/category';
+import { CategoryRepository } from '../repository/category.reopsitory';
 import { HttpException } from '../utils/exceptions';
 
 export class CategoryService {
-  async getAll() {
-    return await Category.findAll({ where: { deletedAt: null } });
+  private repository = new CategoryRepository();
+
+  async getAll(): Promise<CategoryModel[]> {
+    return await this.repository.findAll();
   }
 
-  async getById(id: string) {
-    const category = await Category.findOne({ where: { id, deletedAt: null } });
+  async getById(id: string): Promise<CategoryModel> {
+    const category = await this.repository.findById(id);
     if (!category) throw new HttpException(404, 'Category not found');
     return category;
   }
 
-  async create(data: { name: string }) {
-    const newCategory = await Category.create(data);
-    return newCategory;
+  async create(data: { name: string }): Promise<CategoryModel> {
+    return await this.repository.create(data);
   }
 
-  async update(id: string, data: Partial<{ name: string }>) {
-    const category = await Category.findOne({ where: { id, deletedAt: null } });
-    if (!category) throw new HttpException(404, 'Category not found');
-
-    await category.update({ ...data });
-    return category;
+  async update(id: string, data: Partial<{ name: string }>): Promise<CategoryModel> {
+    const updated = await this.repository.update(id, data);
+    if (!updated) throw new HttpException(404, 'Category not found');
+    return updated;
   }
 
-  async delete(id: string) {
-    const category = await Category.findOne({ where: { id, deletedAt: null } });
-    if (!category) throw new HttpException(404, 'Category not found');
-
-    await category.destroy(); 
+  async delete(id: string): Promise<void> {
+    const deleted = await this.repository.delete(id);
+    if (!deleted) throw new HttpException(404, 'Category not found');
   }
 }
