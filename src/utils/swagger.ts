@@ -6,13 +6,13 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Products API QA',
+      title: 'Products API DEV',
       version: '1.0.0',
-      description: 'Inventory manager for Products - QA TEST #1',
+      description: 'Inventory manager for Products - DEV',
     },
     servers: [
       {
-        url: 'http://44.205.201.108:3000',
+        url: 'http://52.45.170.88:3000',
       },
     ],
   },
